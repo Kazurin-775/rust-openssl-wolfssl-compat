@@ -1,3 +1,8 @@
+// Enable OpenSSL compatibility layer
+#define OPENSSL_EXTRA
+// Set compatibility level to 1.1.0 (see wolfssl/openssl/opensslv.h)
+#define WOLFSSL_APACHE_HTTPD
+
 #include <openssl/opensslv.h>
 #include <openssl/opensslconf.h>
 
