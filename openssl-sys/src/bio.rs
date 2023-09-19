@@ -22,11 +22,13 @@ pub unsafe fn BIO_clear_retry_flags(b: *mut BIO) {
     BIO_clear_flags(b, BIO_FLAGS_RWS | BIO_FLAGS_SHOULD_RETRY)
 }
 
-pub const BIO_FLAGS_READ: c_int = 0x01;
-pub const BIO_FLAGS_WRITE: c_int = 0x02;
-pub const BIO_FLAGS_IO_SPECIAL: c_int = 0x04;
+// The wolfSSL definition of these constants is different from that of OpenSSL
+// (see wolfssl/ssl.h)
+pub const BIO_FLAGS_READ: c_int = 0x02;
+pub const BIO_FLAGS_WRITE: c_int = 0x04;
+pub const BIO_FLAGS_IO_SPECIAL: c_int = 0x08;
 pub const BIO_FLAGS_RWS: c_int = BIO_FLAGS_READ | BIO_FLAGS_WRITE | BIO_FLAGS_IO_SPECIAL;
-pub const BIO_FLAGS_SHOULD_RETRY: c_int = 0x08;
+pub const BIO_FLAGS_SHOULD_RETRY: c_int = 0x10;
 
 pub unsafe fn BIO_get_mem_data(b: *mut BIO, pp: *mut *mut c_char) -> c_long {
     BIO_ctrl(b, BIO_CTRL_INFO, 0, pp as *mut c_void)
