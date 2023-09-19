@@ -141,10 +141,13 @@ stack!(stack_st_X509_OBJECT);
 stack!(stack_st_X509_LOOKUP);
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_verify_cert_error_string"]
     pub fn X509_verify_cert_error_string(n: c_long) -> *const c_char;
 
+    #[link_name = "wolfSSL_X509_sign"]
     pub fn X509_sign(x: *mut X509, pkey: *mut EVP_PKEY, md: *const EVP_MD) -> c_int;
 
+    #[link_name = "wolfSSL_X509_digest"]
     pub fn X509_digest(
         x: *const X509,
         digest: *const EVP_MD,
@@ -152,34 +155,50 @@ extern "C" {
         len: *mut c_uint,
     ) -> c_int;
 
+    #[link_name = "wolfSSL_X509_REQ_sign"]
     pub fn X509_REQ_sign(x: *mut X509_REQ, pkey: *mut EVP_PKEY, md: *const EVP_MD) -> c_int;
 }
 
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_i2d_X509_bio"]
         pub fn i2d_X509_bio(b: *mut BIO, x: #[const_ptr_if(ossl300)] X509) -> c_int;
+        #[link_name = "wolfSSL_i2d_X509_REQ_bio"]
         pub fn i2d_X509_REQ_bio(b: *mut BIO, x: #[const_ptr_if(ossl300)] X509_REQ) -> c_int;
+        #[link_name = "wolfSSL_i2d_PrivateKey_bio"]
         pub fn i2d_PrivateKey_bio(b: *mut BIO, x: #[const_ptr_if(ossl300)] EVP_PKEY) -> c_int;
+        #[link_name = "wolfSSL_i2d_PUBKEY_bio"]
         pub fn i2d_PUBKEY_bio(b: *mut BIO, x: #[const_ptr_if(ossl300)] EVP_PKEY) -> c_int;
 
+        #[link_name = "wolfSSL_i2d_PUBKEY"]
         pub fn i2d_PUBKEY(k: #[const_ptr_if(ossl300)] EVP_PKEY, buf: *mut *mut u8) -> c_int;
+        #[link_name = "wolfSSL_i2d_RSA_PUBKEY"]
         pub fn i2d_RSA_PUBKEY(k: #[const_ptr_if(ossl300)] RSA, buf: *mut *mut u8) -> c_int;
+        #[link_name = "wolfSSL_i2d_DSA_PUBKEY"]
         pub fn i2d_DSA_PUBKEY(a: #[const_ptr_if(ossl300)] DSA, pp: *mut *mut c_uchar) -> c_int;
+        #[link_name = "wolfSSL_i2d_PrivateKey"]
         pub fn i2d_PrivateKey(k: #[const_ptr_if(ossl300)] EVP_PKEY, buf: *mut *mut u8) -> c_int;
+        #[link_name = "wolfSSL_i2d_ECPrivateKey"]
         pub fn i2d_ECPrivateKey(ec_key: #[const_ptr_if(ossl300)] EC_KEY, pp: *mut *mut c_uchar) -> c_int;
+        #[link_name = "wolfSSL_i2d_EC_PUBKEY"]
         pub fn i2d_EC_PUBKEY(a: #[const_ptr_if(ossl300)] EC_KEY, pp: *mut *mut c_uchar) -> c_int;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_d2i_PUBKEY"]
     pub fn d2i_PUBKEY(k: *mut *mut EVP_PKEY, buf: *mut *const u8, len: c_long) -> *mut EVP_PKEY;
+    #[link_name = "wolfSSL_d2i_RSA_PUBKEY"]
     pub fn d2i_RSA_PUBKEY(k: *mut *mut RSA, buf: *mut *const u8, len: c_long) -> *mut RSA;
+    #[link_name = "wolfSSL_d2i_DSA_PUBKEY"]
     pub fn d2i_DSA_PUBKEY(k: *mut *mut DSA, pp: *mut *const c_uchar, length: c_long) -> *mut DSA;
+    #[link_name = "wolfSSL_d2i_EC_PUBKEY"]
     pub fn d2i_EC_PUBKEY(
         a: *mut *mut EC_KEY,
         pp: *mut *const c_uchar,
         length: c_long,
     ) -> *mut EC_KEY;
 
+    #[link_name = "wolfSSL_d2i_ECPrivateKey"]
     pub fn d2i_ECPrivateKey(
         k: *mut *mut EC_KEY,
         pp: *mut *const c_uchar,
@@ -190,6 +209,7 @@ extern "C" {
 const_ptr_api! {
     extern "C" {
         #[cfg(any(ossl102, libressl350))]
+        #[link_name = "wolfSSL_X509_ALGOR_get0"]
         pub fn X509_ALGOR_get0(
             paobj: *mut #[const_ptr_if(any(ossl110, libressl350))] ASN1_OBJECT,
             pptype: *mut c_int,
@@ -200,23 +220,30 @@ const_ptr_api! {
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_gmtime_adj"]
     pub fn X509_gmtime_adj(time: *mut ASN1_TIME, adj: c_long) -> *mut ASN1_TIME;
 
+    #[link_name = "wolfSSL_X509_to_X509_REQ"]
     pub fn X509_to_X509_REQ(x: *mut X509, pkey: *mut EVP_PKEY, md: *const EVP_MD) -> *mut X509_REQ;
 
+    #[link_name = "wolfSSL_X509_ALGOR_free"]
     pub fn X509_ALGOR_free(x: *mut X509_ALGOR);
 
+    #[link_name = "wolfSSL_X509_REVOKED_new"]
     pub fn X509_REVOKED_new() -> *mut X509_REVOKED;
+    #[link_name = "wolfSSL_X509_REVOKED_free"]
     pub fn X509_REVOKED_free(x: *mut X509_REVOKED);
 }
 const_ptr_api! {
     extern "C" {
         #[cfg(any(ossl110, libressl270))]
+        #[link_name = "wolfSSL_X509_REVOKED_dup"]
         pub fn X509_REVOKED_dup(rev: #[const_ptr_if(ossl300)] X509_REVOKED) -> *mut X509_REVOKED;
     }
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_d2i_X509_REVOKED"]
     pub fn d2i_X509_REVOKED(
         a: *mut *mut X509_REVOKED,
         pp: *mut *const c_uchar,
@@ -225,12 +252,16 @@ extern "C" {
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_i2d_X509_REVOKED"]
         pub fn i2d_X509_REVOKED(x: #[const_ptr_if(ossl300)] X509_REVOKED, buf: *mut *mut u8) -> c_int;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_CRL_new"]
     pub fn X509_CRL_new() -> *mut X509_CRL;
+    #[link_name = "wolfSSL_X509_CRL_free"]
     pub fn X509_CRL_free(x: *mut X509_CRL);
+    #[link_name = "wolfSSL_d2i_X509_CRL"]
     pub fn d2i_X509_CRL(
         a: *mut *mut X509_CRL,
         pp: *mut *const c_uchar,
@@ -239,15 +270,20 @@ extern "C" {
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_i2d_X509_CRL"]
         pub fn i2d_X509_CRL(x: #[const_ptr_if(ossl300)] X509_CRL, buf: *mut *mut u8) -> c_int;
         #[cfg(any(ossl110, libressl270))]
+        #[link_name = "wolfSSL_X509_CRL_dup"]
         pub fn X509_CRL_dup(x: #[const_ptr_if(ossl300)] X509_CRL) -> *mut X509_CRL;
     }
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_REQ_new"]
     pub fn X509_REQ_new() -> *mut X509_REQ;
+    #[link_name = "wolfSSL_X509_REQ_free"]
     pub fn X509_REQ_free(x: *mut X509_REQ);
+    #[link_name = "wolfSSL_d2i_X509_REQ"]
     pub fn d2i_X509_REQ(
         a: *mut *mut X509_REQ,
         pp: *mut *const c_uchar,
@@ -256,9 +292,11 @@ extern "C" {
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_i2d_X509_REQ"]
         pub fn i2d_X509_REQ(x: #[const_ptr_if(ossl300)] X509_REQ, buf: *mut *mut u8) -> c_int;
 
         #[cfg(any(ossl102, libressl273))]
+        #[link_name = "wolfSSL_X509_get0_signature"]
         pub fn X509_get0_signature(
             psig: *mut #[const_ptr_if(any(ossl110, libressl273))] ASN1_BIT_STRING,
             palg: *mut #[const_ptr_if(any(ossl110, libressl273))] X509_ALGOR,
@@ -266,32 +304,45 @@ const_ptr_api! {
         );
 
         #[cfg(any(ossl110, libressl270))]
+        #[link_name = "wolfSSL_X509_REQ_dup"]
         pub fn X509_REQ_dup(x: #[const_ptr_if(ossl300)] X509_REQ) -> *mut X509_REQ;
     }
 }
 extern "C" {
     #[cfg(ossl102)]
+    #[link_name = "wolfSSL_X509_get_signature_nid"]
     pub fn X509_get_signature_nid(x: *const X509) -> c_int;
 
+    #[link_name = "wolfSSL_X509_EXTENSION_free"]
     pub fn X509_EXTENSION_free(ext: *mut X509_EXTENSION);
 
+    #[link_name = "wolfSSL_X509_NAME_ENTRY_free"]
     pub fn X509_NAME_ENTRY_free(x: *mut X509_NAME_ENTRY);
 
+    #[link_name = "wolfSSL_X509_NAME_new"]
     pub fn X509_NAME_new() -> *mut X509_NAME;
+    #[link_name = "wolfSSL_X509_NAME_cmp"]
     pub fn X509_NAME_cmp(x: *const X509_NAME, y: *const X509_NAME) -> c_int;
+    #[link_name = "wolfSSL_X509_NAME_free"]
     pub fn X509_NAME_free(x: *mut X509_NAME);
 
+    #[link_name = "wolfSSL_X509_new"]
     pub fn X509_new() -> *mut X509;
+    #[link_name = "wolfSSL_X509_free"]
     pub fn X509_free(x: *mut X509);
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_i2d_X509"]
         pub fn i2d_X509(x: #[const_ptr_if(ossl300)] X509, buf: *mut *mut u8) -> c_int;
         #[cfg(any(ossl110, libressl270))]
+        #[link_name = "wolfSSL_X509_NAME_dup"]
         pub fn X509_NAME_dup(x: #[const_ptr_if(ossl300)] X509_NAME) -> *mut X509_NAME;
         #[cfg(any(ossl110, libressl270))]
+        #[link_name = "wolfSSL_X509_dup"]
         pub fn X509_dup(x: #[const_ptr_if(ossl300)] X509) -> *mut X509;
         #[cfg(any(ossl101, libressl350))]
+        #[link_name = "wolfSSL_X509_NAME_add_entry"]
         pub fn X509_NAME_add_entry(
             name: *mut X509_NAME,
             ne: #[const_ptr_if(any(ossl110, libressl))] X509_NAME_ENTRY,
@@ -301,74 +352,104 @@ const_ptr_api! {
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_d2i_X509"]
     pub fn d2i_X509(a: *mut *mut X509, pp: *mut *const c_uchar, length: c_long) -> *mut X509;
+    #[link_name = "wolfSSL_d2i_X509_bio"]
     pub fn d2i_X509_bio(b: *mut BIO, a: *mut *mut X509) -> *mut X509;
 
+    #[link_name = "wolfSSL_X509_get_pubkey"]
     pub fn X509_get_pubkey(x: *mut X509) -> *mut EVP_PKEY;
 
+    #[link_name = "wolfSSL_X509_set_version"]
     pub fn X509_set_version(x: *mut X509, version: c_long) -> c_int;
     #[cfg(ossl110)]
+    #[link_name = "wolfSSL_X509_get_version"]
     pub fn X509_get_version(x: *const X509) -> c_long;
+    #[link_name = "wolfSSL_X509_set_serialNumber"]
     pub fn X509_set_serialNumber(x: *mut X509, sn: *mut ASN1_INTEGER) -> c_int;
+    #[link_name = "wolfSSL_X509_get_serialNumber"]
     pub fn X509_get_serialNumber(x: *mut X509) -> *mut ASN1_INTEGER;
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_set_issuer_name"]
         pub fn X509_set_issuer_name(x: *mut X509, name: #[const_ptr_if(ossl300)] X509_NAME) -> c_int;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_issuer_name_hash"]
     pub fn X509_issuer_name_hash(x: *mut X509) -> c_ulong;
+    #[link_name = "wolfSSL_X509_subject_name_hash"]
     pub fn X509_subject_name_hash(x: *mut X509) -> c_ulong;
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_get_issuer_name"]
         pub fn X509_get_issuer_name(x: #[const_ptr_if(any(ossl110, libressl280))] X509) -> *mut X509_NAME;
+        #[link_name = "wolfSSL_X509_set_subject_name"]
         pub fn X509_set_subject_name(x: *mut X509, name: #[const_ptr_if(ossl300)] X509_NAME) -> c_int;
+        #[link_name = "wolfSSL_X509_get_subject_name"]
         pub fn X509_get_subject_name(x: #[const_ptr_if(any(ossl110, libressl280))] X509) -> *mut X509_NAME;
     }
 }
 cfg_if! {
     if #[cfg(any(ossl110, libressl350))] {
         extern "C" {
+            #[link_name = "wolfSSL_X509_set1_notBefore"]
             pub fn X509_set1_notBefore(x: *mut X509, tm: *const ASN1_TIME) -> c_int;
+            #[link_name = "wolfSSL_X509_set1_notAfter"]
             pub fn X509_set1_notAfter(x: *mut X509, tm: *const ASN1_TIME) -> c_int;
         }
     } else {
         extern "C" {
+            #[link_name = "wolfSSL_X509_set_notBefore"]
             pub fn X509_set_notBefore(x: *mut X509, tm: *const ASN1_TIME) -> c_int;
+            #[link_name = "wolfSSL_X509_set_notAfter"]
             pub fn X509_set_notAfter(x: *mut X509, tm: *const ASN1_TIME) -> c_int;
         }
     }
 }
 extern "C" {
     #[cfg(any(ossl110, libressl350))]
+    #[link_name = "wolfSSL_X509_REQ_get_version"]
     pub fn X509_REQ_get_version(req: *const X509_REQ) -> c_long;
+    #[link_name = "wolfSSL_X509_REQ_set_version"]
     pub fn X509_REQ_set_version(req: *mut X509_REQ, version: c_long) -> c_int;
     #[cfg(any(ossl110, libressl350))]
+    #[link_name = "wolfSSL_X509_REQ_get_subject_name"]
     pub fn X509_REQ_get_subject_name(req: *const X509_REQ) -> *mut X509_NAME;
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_REQ_set_subject_name"]
         pub fn X509_REQ_set_subject_name(req: *mut X509_REQ, name: #[const_ptr_if(ossl300)] X509_NAME) -> c_int;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_REQ_set_pubkey"]
     pub fn X509_REQ_set_pubkey(req: *mut X509_REQ, pkey: *mut EVP_PKEY) -> c_int;
+    #[link_name = "wolfSSL_X509_REQ_get_pubkey"]
     pub fn X509_REQ_get_pubkey(req: *mut X509_REQ) -> *mut EVP_PKEY;
+    #[link_name = "wolfSSL_X509_REQ_get_extensions"]
     pub fn X509_REQ_get_extensions(req: *mut X509_REQ) -> *mut stack_st_X509_EXTENSION;
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_REQ_add_extensions"]
         pub fn X509_REQ_add_extensions(req: *mut X509_REQ, exts: #[const_ptr_if(ossl300)] stack_st_X509_EXTENSION)
             -> c_int;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_REQ_get_attr_count"]
     pub fn X509_REQ_get_attr_count(req: *const X509_REQ) -> c_int;
+    #[link_name = "wolfSSL_X509_REQ_get_attr_by_NID"]
     pub fn X509_REQ_get_attr_by_NID(req: *const X509_REQ, nid: c_int, lastpos: c_int) -> c_int;
+    #[link_name = "wolfSSL_X509_REQ_get_attr"]
     pub fn X509_REQ_get_attr(req: *const X509_REQ, loc: c_int) -> *mut X509_ATTRIBUTE;
+    #[link_name = "wolfSSL_X509_REQ_delete_attr"]
     pub fn X509_REQ_delete_attr(req: *mut X509_REQ, loc: c_int) -> *mut X509_ATTRIBUTE;
+    #[link_name = "wolfSSL_X509_REQ_add1_attr_by_txt"]
     pub fn X509_REQ_add1_attr_by_txt(
         req: *mut X509_REQ,
         attrname: *const c_char,
@@ -376,6 +457,7 @@ extern "C" {
         bytes: *const c_uchar,
         len: c_int,
     ) -> c_int;
+    #[link_name = "wolfSSL_X509_REQ_add1_attr_by_NID"]
     pub fn X509_REQ_add1_attr_by_NID(
         req: *mut X509_REQ,
         nid: c_int,
@@ -383,6 +465,7 @@ extern "C" {
         bytes: *const c_uchar,
         len: c_int,
     ) -> c_int;
+    #[link_name = "wolfSSL_X509_REQ_add1_attr_by_OBJ"]
     pub fn X509_REQ_add1_attr_by_OBJ(
         req: *mut X509_REQ,
         obj: *const ASN1_OBJECT,
@@ -392,33 +475,47 @@ extern "C" {
     ) -> c_int;
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_set_pubkey"]
     pub fn X509_set_pubkey(x: *mut X509, pkey: *mut EVP_PKEY) -> c_int;
+    #[link_name = "wolfSSL_X509_REQ_verify"]
     pub fn X509_REQ_verify(req: *mut X509_REQ, pkey: *mut EVP_PKEY) -> c_int;
     #[cfg(any(ossl110, libressl273))]
+    #[link_name = "wolfSSL_X509_getm_notBefore"]
     pub fn X509_getm_notBefore(x: *const X509) -> *mut ASN1_TIME;
     #[cfg(any(ossl110, libressl273))]
+    #[link_name = "wolfSSL_X509_getm_notAfter"]
     pub fn X509_getm_notAfter(x: *const X509) -> *mut ASN1_TIME;
     #[cfg(any(ossl110, libressl273))]
+    #[link_name = "wolfSSL_X509_up_ref"]
     pub fn X509_up_ref(x: *mut X509) -> c_int;
 
     #[cfg(any(ossl110, libressl270))]
+    #[link_name = "wolfSSL_X509_REVOKED_get0_serialNumber"]
     pub fn X509_REVOKED_get0_serialNumber(req: *const X509_REVOKED) -> *const ASN1_INTEGER;
     #[cfg(any(ossl110, libressl270))]
+    #[link_name = "wolfSSL_X509_REVOKED_get0_revocationDate"]
     pub fn X509_REVOKED_get0_revocationDate(req: *const X509_REVOKED) -> *const ASN1_TIME;
     #[cfg(any(ossl110, libressl270))]
+    #[link_name = "wolfSSL_X509_REVOKED_get0_extensions"]
     pub fn X509_REVOKED_get0_extensions(r: *const X509_REVOKED) -> *const stack_st_X509_EXTENSION;
 
+    #[link_name = "wolfSSL_X509_REVOKED_set_serialNumber"]
     pub fn X509_REVOKED_set_serialNumber(r: *mut X509_REVOKED, serial: *mut ASN1_INTEGER) -> c_int;
+    #[link_name = "wolfSSL_X509_REVOKED_set_revocationDate"]
     pub fn X509_REVOKED_set_revocationDate(r: *mut X509_REVOKED, tm: *mut ASN1_TIME) -> c_int;
 
+    #[link_name = "wolfSSL_X509_CRL_sign"]
     pub fn X509_CRL_sign(x: *mut X509_CRL, pkey: *mut EVP_PKEY, md: *const EVP_MD) -> c_int;
+    #[link_name = "wolfSSL_X509_CRL_digest"]
     pub fn X509_CRL_digest(
         x: *const X509_CRL,
         digest: *const EVP_MD,
         md: *mut c_uchar,
         len: *mut c_uint,
     ) -> c_int;
+    #[link_name = "wolfSSL_X509_CRL_verify"]
     pub fn X509_CRL_verify(crl: *mut X509_CRL, pkey: *mut EVP_PKEY) -> c_int;
+    #[link_name = "wolfSSL_X509_CRL_get0_by_cert"]
     pub fn X509_CRL_get0_by_cert(
         x: *mut X509_CRL,
         ret: *mut *mut X509_REVOKED,
@@ -427,6 +524,7 @@ extern "C" {
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_CRL_get0_by_serial"]
         pub fn X509_CRL_get0_by_serial(
             x: *mut X509_CRL,
             ret: *mut *mut X509_REVOKED,
@@ -437,41 +535,55 @@ const_ptr_api! {
 
 extern "C" {
     #[cfg(any(ossl110, libressl281))]
+    #[link_name = "wolfSSL_X509_CRL_get_REVOKED"]
     pub fn X509_CRL_get_REVOKED(crl: *mut X509_CRL) -> *mut stack_st_X509_REVOKED;
     #[cfg(any(ossl110, libressl281))]
+    #[link_name = "wolfSSL_X509_CRL_get0_nextUpdate"]
     pub fn X509_CRL_get0_nextUpdate(x: *const X509_CRL) -> *const ASN1_TIME;
     #[cfg(any(ossl110, libressl281))]
+    #[link_name = "wolfSSL_X509_CRL_get0_lastUpdate"]
     pub fn X509_CRL_get0_lastUpdate(x: *const X509_CRL) -> *const ASN1_TIME;
     #[cfg(any(ossl110, libressl281))]
+    #[link_name = "wolfSSL_X509_CRL_get_issuer"]
     pub fn X509_CRL_get_issuer(x: *const X509_CRL) -> *mut X509_NAME;
 
     #[cfg(ossl110)]
+    #[link_name = "wolfSSL_X509_get0_extensions"]
     pub fn X509_get0_extensions(req: *const X509) -> *const stack_st_X509_EXTENSION;
 
+    #[link_name = "wolfSSL_X509_CRL_set_version"]
     pub fn X509_CRL_set_version(crl: *mut X509_CRL, version: c_long) -> c_int;
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_CRL_set_issuer_name"]
         pub fn X509_CRL_set_issuer_name(crl: *mut X509_CRL, name: #[const_ptr_if(ossl300)] X509_NAME) -> c_int;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_CRL_sort"]
     pub fn X509_CRL_sort(crl: *mut X509_CRL) -> c_int;
 
     #[cfg(any(ossl110, libressl270))]
+    #[link_name = "wolfSSL_X509_CRL_up_ref"]
     pub fn X509_CRL_up_ref(crl: *mut X509_CRL) -> c_int;
+    #[link_name = "wolfSSL_X509_CRL_add0_revoked"]
     pub fn X509_CRL_add0_revoked(crl: *mut X509_CRL, rev: *mut X509_REVOKED) -> c_int;
 }
 cfg_if! {
     if #[cfg(any(ossl110, libressl270))] {
         extern "C" {
+            #[link_name = "wolfSSL_X509_CRL_set1_lastUpdate"]
             pub fn X509_CRL_set1_lastUpdate(crl: *mut X509_CRL, tm: *const ASN1_TIME) -> c_int;
+            #[link_name = "wolfSSL_X509_CRL_set1_nextUpdate"]
             pub fn X509_CRL_set1_nextUpdate(crl: *mut X509_CRL, tm: *const ASN1_TIME) -> c_int;
         }
     } else {
         // libressl270 kept them, ossl110 "#define"s them to the variants above
         extern "C" {
+            #[link_name = "wolfSSL_X509_CRL_set_lastUpdate"]
             pub fn X509_CRL_set_lastUpdate(crl: *mut X509_CRL, tm: *const ASN1_TIME) -> c_int;
+            #[link_name = "wolfSSL_X509_CRL_set_nextUpdate"]
             pub fn X509_CRL_set_nextUpdate(crl: *mut X509_CRL, tm: *const ASN1_TIME) -> c_int;
         }
     }
@@ -479,9 +591,13 @@ cfg_if! {
 
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_NAME_entry_count"]
         pub fn X509_NAME_entry_count(n: #[const_ptr_if(any(ossl110, libressl280))] X509_NAME) -> c_int;
+        #[link_name = "wolfSSL_X509_NAME_get_index_by_NID"]
         pub fn X509_NAME_get_index_by_NID(n: #[const_ptr_if(any(ossl300, libressl280))] X509_NAME, nid: c_int, last_pos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_NAME_get_entry"]
         pub fn X509_NAME_get_entry(n: #[const_ptr_if(any(ossl110, libressl280))] X509_NAME, loc: c_int) -> *mut X509_NAME_ENTRY;
+        #[link_name = "wolfSSL_X509_NAME_add_entry_by_NID"]
         pub fn X509_NAME_add_entry_by_NID(
             x: *mut X509_NAME,
             field: c_int,
@@ -491,12 +607,16 @@ const_ptr_api! {
             loc: c_int,
             set: c_int,
         ) -> c_int;
+        #[link_name = "wolfSSL_i2d_X509_NAME"]
         pub fn i2d_X509_NAME(n: #[const_ptr_if(ossl300)] X509_NAME, buf: *mut *mut u8) -> c_int;
+        #[link_name = "wolfSSL_X509_NAME_ENTRY_get_object"]
         pub fn X509_NAME_ENTRY_get_object(ne: #[const_ptr_if(any(ossl110, libressl280))] X509_NAME_ENTRY) -> *mut ASN1_OBJECT;
+        #[link_name = "wolfSSL_X509_NAME_ENTRY_get_data"]
         pub fn X509_NAME_ENTRY_get_data(ne: #[const_ptr_if(any(ossl110, libressl280))] X509_NAME_ENTRY) -> *mut ASN1_STRING;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_NAME_add_entry_by_txt"]
     pub fn X509_NAME_add_entry_by_txt(
         x: *mut X509_NAME,
         field: *const c_char,
@@ -506,6 +626,7 @@ extern "C" {
         loc: c_int,
         set: c_int,
     ) -> c_int;
+    #[link_name = "wolfSSL_d2i_X509_NAME"]
     pub fn d2i_X509_NAME(
         n: *mut *mut X509_NAME,
         pp: *mut *const c_uchar,
@@ -516,8 +637,11 @@ extern "C" {
 // "raw" X509_EXTENSION related functions
 extern "C" {
     // in X509
+    #[link_name = "wolfSSL_X509_delete_ext"]
     pub fn X509_delete_ext(x: *mut X509, loc: c_int) -> *mut X509_EXTENSION;
+    #[link_name = "wolfSSL_X509_add_ext"]
     pub fn X509_add_ext(x: *mut X509, ext: *mut X509_EXTENSION, loc: c_int) -> c_int;
+    #[link_name = "wolfSSL_X509_add1_ext_i2d"]
     pub fn X509_add1_ext_i2d(
         x: *mut X509,
         nid: c_int,
@@ -526,8 +650,11 @@ extern "C" {
         flags: c_ulong,
     ) -> c_int;
     // in X509_CRL
+    #[link_name = "wolfSSL_X509_CRL_delete_ext"]
     pub fn X509_CRL_delete_ext(x: *mut X509_CRL, loc: c_int) -> *mut X509_EXTENSION;
+    #[link_name = "wolfSSL_X509_CRL_add_ext"]
     pub fn X509_CRL_add_ext(x: *mut X509_CRL, ext: *mut X509_EXTENSION, loc: c_int) -> c_int;
+    #[link_name = "wolfSSL_X509_CRL_add1_ext_i2d"]
     pub fn X509_CRL_add1_ext_i2d(
         x: *mut X509_CRL,
         nid: c_int,
@@ -536,12 +663,15 @@ extern "C" {
         flags: c_ulong,
     ) -> c_int;
     // in X509_REVOKED
+    #[link_name = "wolfSSL_X509_REVOKED_delete_ext"]
     pub fn X509_REVOKED_delete_ext(x: *mut X509_REVOKED, loc: c_int) -> *mut X509_EXTENSION;
+    #[link_name = "wolfSSL_X509_REVOKED_add_ext"]
     pub fn X509_REVOKED_add_ext(
         x: *mut X509_REVOKED,
         ext: *mut X509_EXTENSION,
         loc: c_int,
     ) -> c_int;
+    #[link_name = "wolfSSL_X509_REVOKED_add1_ext_i2d"]
     pub fn X509_REVOKED_add1_ext_i2d(
         x: *mut X509_REVOKED,
         nid: c_int,
@@ -551,19 +681,25 @@ extern "C" {
     ) -> c_int;
     // X509_EXTENSION stack
     // - these getters always used *const STACK
+    #[link_name = "wolfSSL_X509v3_get_ext_count"]
     pub fn X509v3_get_ext_count(x: *const stack_st_X509_EXTENSION) -> c_int;
+    #[link_name = "wolfSSL_X509v3_get_ext_by_NID"]
     pub fn X509v3_get_ext_by_NID(
         x: *const stack_st_X509_EXTENSION,
         nid: c_int,
         lastpos: c_int,
     ) -> c_int;
+    #[link_name = "wolfSSL_X509v3_get_ext_by_critical"]
     pub fn X509v3_get_ext_by_critical(
         x: *const stack_st_X509_EXTENSION,
         crit: c_int,
         lastpos: c_int,
     ) -> c_int;
+    #[link_name = "wolfSSL_X509v3_get_ext"]
     pub fn X509v3_get_ext(x: *const stack_st_X509_EXTENSION, loc: c_int) -> *mut X509_EXTENSION;
+    #[link_name = "wolfSSL_X509v3_delete_ext"]
     pub fn X509v3_delete_ext(x: *mut stack_st_X509_EXTENSION, loc: c_int) -> *mut X509_EXTENSION;
+    #[link_name = "wolfSSL_X509v3_add_ext"]
     pub fn X509v3_add_ext(
         x: *mut *mut stack_st_X509_EXTENSION,
         ex: *mut X509_EXTENSION,
@@ -571,20 +707,26 @@ extern "C" {
     ) -> *mut stack_st_X509_EXTENSION;
     // - X509V3_add1_i2d in x509v3.rs
     // X509_EXTENSION itself
+    #[link_name = "wolfSSL_X509_EXTENSION_create_by_NID"]
     pub fn X509_EXTENSION_create_by_NID(
         ex: *mut *mut X509_EXTENSION,
         nid: c_int,
         crit: c_int,
         data: *mut ASN1_OCTET_STRING,
     ) -> *mut X509_EXTENSION;
+    #[link_name = "wolfSSL_X509_EXTENSION_set_critical"]
     pub fn X509_EXTENSION_set_critical(ex: *mut X509_EXTENSION, crit: c_int) -> c_int;
+    #[link_name = "wolfSSL_X509_EXTENSION_set_data"]
     pub fn X509_EXTENSION_set_data(ex: *mut X509_EXTENSION, data: *mut ASN1_OCTET_STRING) -> c_int;
+    #[link_name = "wolfSSL_X509_EXTENSION_get_object"]
     pub fn X509_EXTENSION_get_object(ext: *mut X509_EXTENSION) -> *mut ASN1_OBJECT;
+    #[link_name = "wolfSSL_X509_EXTENSION_get_data"]
     pub fn X509_EXTENSION_get_data(ext: *mut X509_EXTENSION) -> *mut ASN1_OCTET_STRING;
 }
 
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_i2d_X509_EXTENSION"]
         pub fn i2d_X509_EXTENSION(ext: #[const_ptr_if(ossl300)] X509_EXTENSION, pp: *mut *mut c_uchar) -> c_int;
     }
 }
@@ -592,11 +734,17 @@ const_ptr_api! {
 const_ptr_api! {
     extern "C" {
         // in X509
+        #[link_name = "wolfSSL_X509_get_ext_count"]
         pub fn X509_get_ext_count(x: #[const_ptr_if(any(ossl110, libressl280))] X509) -> c_int;
+        #[link_name = "wolfSSL_X509_get_ext_by_NID"]
         pub fn X509_get_ext_by_NID(x: #[const_ptr_if(any(ossl110, libressl280))] X509, nid: c_int, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_get_ext_by_OBJ"]
         pub fn X509_get_ext_by_OBJ(x: #[const_ptr_if(any(ossl110, libressl280))] X509, obj: #[const_ptr_if(any(ossl110, libressl280))] ASN1_OBJECT, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_get_ext_by_critical"]
         pub fn X509_get_ext_by_critical(x: #[const_ptr_if(any(ossl110, libressl280))] X509, crit: c_int, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_get_ext"]
         pub fn X509_get_ext(x: #[const_ptr_if(any(ossl110, libressl280))] X509, loc: c_int) -> *mut X509_EXTENSION;
+        #[link_name = "wolfSSL_X509_get_ext_d2i"]
         pub fn X509_get_ext_d2i(
             x: #[const_ptr_if(any(ossl110, libressl280))] X509,
             nid: c_int,
@@ -604,11 +752,17 @@ const_ptr_api! {
             idx: *mut c_int,
         ) -> *mut c_void;
         // in X509_CRL
+        #[link_name = "wolfSSL_X509_CRL_get_ext_count"]
         pub fn X509_CRL_get_ext_count(x: #[const_ptr_if(any(ossl110, libressl280))] X509_CRL) -> c_int;
+        #[link_name = "wolfSSL_X509_CRL_get_ext_by_NID"]
         pub fn X509_CRL_get_ext_by_NID(x: #[const_ptr_if(any(ossl110, libressl280))] X509_CRL, nid: c_int, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_CRL_get_ext_by_OBJ"]
         pub fn X509_CRL_get_ext_by_OBJ(x: #[const_ptr_if(any(ossl110, libressl280))] X509_CRL, obj: #[const_ptr_if(any(ossl110, libressl280))] ASN1_OBJECT, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_CRL_get_ext_by_critical"]
         pub fn X509_CRL_get_ext_by_critical(x: #[const_ptr_if(any(ossl110, libressl280))] X509_CRL, crit: c_int, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_CRL_get_ext"]
         pub fn X509_CRL_get_ext(x: #[const_ptr_if(any(ossl110, libressl280))] X509_CRL, loc: c_int) -> *mut X509_EXTENSION;
+        #[link_name = "wolfSSL_X509_CRL_get_ext_d2i"]
         pub fn X509_CRL_get_ext_d2i(
             x: #[const_ptr_if(any(ossl110, libressl280))] X509_CRL,
             nid: c_int,
@@ -616,11 +770,17 @@ const_ptr_api! {
             idx: *mut c_int,
         ) -> *mut c_void;
         // in X509_REVOKED
+        #[link_name = "wolfSSL_X509_REVOKED_get_ext_count"]
         pub fn X509_REVOKED_get_ext_count(x: #[const_ptr_if(any(ossl110, libressl280))] X509_REVOKED) -> c_int;
+        #[link_name = "wolfSSL_X509_REVOKED_get_ext_by_NID"]
         pub fn X509_REVOKED_get_ext_by_NID(x: #[const_ptr_if(any(ossl110, libressl280))] X509_REVOKED, nid: c_int, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_REVOKED_get_ext_by_OBJ"]
         pub fn X509_REVOKED_get_ext_by_OBJ(x: #[const_ptr_if(any(ossl110, libressl280))] X509_REVOKED, obj: #[const_ptr_if(any(ossl110, libressl280))] ASN1_OBJECT, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_REVOKED_get_ext_by_critical"]
         pub fn X509_REVOKED_get_ext_by_critical(x: #[const_ptr_if(any(ossl110, libressl280))] X509_REVOKED, crit: c_int, lastpos: c_int) -> c_int;
+        #[link_name = "wolfSSL_X509_REVOKED_get_ext"]
         pub fn X509_REVOKED_get_ext(x: #[const_ptr_if(any(ossl110, libressl280))] X509_REVOKED, loc: c_int) -> *mut X509_EXTENSION;
+        #[link_name = "wolfSSL_X509_REVOKED_get_ext_d2i"]
         pub fn X509_REVOKED_get_ext_d2i(
             x: #[const_ptr_if(any(ossl110, libressl280))] X509_REVOKED,
             nid: c_int,
@@ -628,60 +788,81 @@ const_ptr_api! {
             idx: *mut c_int,
         ) -> *mut c_void;
         // X509_EXTENSION stack
+        #[link_name = "wolfSSL_X509v3_get_ext_by_OBJ"]
         pub fn X509v3_get_ext_by_OBJ(x: *const stack_st_X509_EXTENSION, obj: #[const_ptr_if(any(ossl110, libressl280))] ASN1_OBJECT, lastpos: c_int) -> c_int;
         // X509_EXTENSION itself
+        #[link_name = "wolfSSL_X509_EXTENSION_create_by_OBJ"]
         pub fn X509_EXTENSION_create_by_OBJ(ex: *mut *mut X509_EXTENSION, obj: #[const_ptr_if(any(ossl110, libressl280))] ASN1_OBJECT, crit: c_int, data: *mut ASN1_OCTET_STRING) -> *mut X509_EXTENSION;
+        #[link_name = "wolfSSL_X509_EXTENSION_set_object"]
         pub fn X509_EXTENSION_set_object(ex: *mut X509_EXTENSION, obj: #[const_ptr_if(any(ossl110, libressl280))] ASN1_OBJECT) -> c_int;
+        #[link_name = "wolfSSL_X509_EXTENSION_get_critical"]
         pub fn X509_EXTENSION_get_critical(ex: #[const_ptr_if(any(ossl110, libressl280))] X509_EXTENSION) -> c_int;
     }
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_verify_cert"]
     pub fn X509_verify_cert(ctx: *mut X509_STORE_CTX) -> c_int;
 }
 
 const_ptr_api! {
     extern "C" {
         #[cfg(any(ossl110, libressl270))]
+        #[link_name = "wolfSSL_X509_STORE_get0_objects"]
         pub fn X509_STORE_get0_objects(ctx: #[const_ptr_if(ossl300)] X509_STORE) -> *mut stack_st_X509_OBJECT;
     }
 }
 
 #[cfg(any(ossl110, libressl270))]
 extern "C" {
+    #[link_name = "wolfSSL_X509_OBJECT_get0_X509"]
     pub fn X509_OBJECT_get0_X509(x: *const X509_OBJECT) -> *mut X509;
 }
 
 cfg_if! {
     if #[cfg(any(ossl110, libressl350))] {
         extern "C" {
+            #[link_name = "wolfSSL_X509_OBJECT_free"]
             pub fn X509_OBJECT_free(a: *mut X509_OBJECT);
         }
     } else {
         extern "C" {
+            #[link_name = "wolfSSL_X509_OBJECT_free_contents"]
             pub fn X509_OBJECT_free_contents(a: *mut X509_OBJECT);
         }
     }
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_get_default_cert_file_env"]
     pub fn X509_get_default_cert_file_env() -> *const c_char;
+    #[link_name = "wolfSSL_X509_get_default_cert_file"]
     pub fn X509_get_default_cert_file() -> *const c_char;
+    #[link_name = "wolfSSL_X509_get_default_cert_dir_env"]
     pub fn X509_get_default_cert_dir_env() -> *const c_char;
+    #[link_name = "wolfSSL_X509_get_default_cert_dir"]
     pub fn X509_get_default_cert_dir() -> *const c_char;
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_cmp"]
     pub fn X509_cmp(a: *const X509, b: *const X509) -> c_int;
+    #[link_name = "wolfSSL_X509_issuer_and_serial_cmp"]
     pub fn X509_issuer_and_serial_cmp(a: *const X509, b: *const X509) -> c_int;
+    #[link_name = "wolfSSL_X509_issuer_name_cmp"]
     pub fn X509_issuer_name_cmp(a: *const X509, b: *const X509) -> c_int;
+    #[link_name = "wolfSSL_X509_subject_name_cmp"]
     pub fn X509_subject_name_cmp(a: *const X509, b: *const X509) -> c_int;
+    #[link_name = "wolfSSL_X509_CRL_cmp"]
     pub fn X509_CRL_cmp(a: *const X509_CRL, b: *const X509_CRL) -> c_int;
+    #[link_name = "wolfSSL_X509_CRL_match"]
     pub fn X509_CRL_match(a: *const X509_CRL, b: *const X509_CRL) -> c_int;
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_print"]
     pub fn X509_print(bio: *mut BIO, x509: *mut X509) -> c_int;
+    #[link_name = "wolfSSL_X509_REQ_print"]
     pub fn X509_REQ_print(bio: *mut BIO, req: *mut X509_REQ) -> c_int;
 }
 
@@ -699,21 +880,27 @@ pub struct X509_PURPOSE {
 
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_PURPOSE_get_by_sname"]
         pub fn X509_PURPOSE_get_by_sname(sname: #[const_ptr_if(any(ossl110, libressl280))] c_char) -> c_int;
     }
 }
 extern "C" {
+    #[link_name = "wolfSSL_X509_PURPOSE_get0"]
     pub fn X509_PURPOSE_get0(idx: c_int) -> *mut X509_PURPOSE;
 }
 
 extern "C" {
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_new"]
     pub fn X509_ATTRIBUTE_new() -> *mut X509_ATTRIBUTE;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_free"]
     pub fn X509_ATTRIBUTE_free(attr: *mut X509_ATTRIBUTE);
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_create"]
     pub fn X509_ATTRIBUTE_create(
         nid: c_int,
         atrtype: c_int,
         value: *mut c_void,
     ) -> *mut X509_ATTRIBUTE;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_create_by_NID"]
     pub fn X509_ATTRIBUTE_create_by_NID(
         attr: *mut *mut X509_ATTRIBUTE,
         nid: c_int,
@@ -721,6 +908,7 @@ extern "C" {
         data: *const c_void,
         len: c_int,
     ) -> *mut X509_ATTRIBUTE;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_create_by_OBJ"]
     pub fn X509_ATTRIBUTE_create_by_OBJ(
         attr: *mut *mut X509_ATTRIBUTE,
         obj: *const ASN1_OBJECT,
@@ -728,6 +916,7 @@ extern "C" {
         data: *const c_void,
         len: c_int,
     ) -> *mut X509_ATTRIBUTE;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_create_by_txt"]
     pub fn X509_ATTRIBUTE_create_by_txt(
         attr: *mut *mut X509_ATTRIBUTE,
         atrname: *const c_char,
@@ -735,21 +924,27 @@ extern "C" {
         bytes: *const c_uchar,
         len: c_int,
     ) -> *mut X509_ATTRIBUTE;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_set1_object"]
     pub fn X509_ATTRIBUTE_set1_object(attr: *mut X509_ATTRIBUTE, obj: *const ASN1_OBJECT) -> c_int;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_set1_data"]
     pub fn X509_ATTRIBUTE_set1_data(
         attr: *mut X509_ATTRIBUTE,
         attrtype: c_int,
         data: *const c_void,
         len: c_int,
     ) -> c_int;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_get0_data"]
     pub fn X509_ATTRIBUTE_get0_data(
         attr: *mut X509_ATTRIBUTE,
         idx: c_int,
         atrtype: c_int,
         data: *mut c_void,
     ) -> *mut c_void;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_get0_object"]
     pub fn X509_ATTRIBUTE_get0_object(attr: *mut X509_ATTRIBUTE) -> *mut ASN1_OBJECT;
+    #[link_name = "wolfSSL_X509_ATTRIBUTE_get0_type"]
     pub fn X509_ATTRIBUTE_get0_type(attr: *mut X509_ATTRIBUTE, idx: c_int) -> *mut ASN1_TYPE;
+    #[link_name = "wolfSSL_d2i_X509_ATTRIBUTE"]
     pub fn d2i_X509_ATTRIBUTE(
         a: *mut *mut X509_ATTRIBUTE,
         pp: *mut *const c_uchar,
@@ -758,10 +953,13 @@ extern "C" {
 }
 const_ptr_api! {
     extern "C" {
+        #[link_name = "wolfSSL_X509_ATTRIBUTE_count"]
         pub fn X509_ATTRIBUTE_count(
             attr: #[const_ptr_if(any(ossl110, libressl280))] X509_ATTRIBUTE // const since OpenSSL v1.1.0
         ) -> c_int;
+        #[link_name = "wolfSSL_i2d_X509_ATTRIBUTE"]
         pub fn i2d_X509_ATTRIBUTE(x: #[const_ptr_if(ossl300)] X509_ATTRIBUTE, buf: *mut *mut u8) -> c_int;
+        #[link_name = "wolfSSL_X509_ATTRIBUTE_dup"]
         pub fn X509_ATTRIBUTE_dup(x: #[const_ptr_if(ossl300)] X509_ATTRIBUTE) -> *mut X509_ATTRIBUTE;
     }
 }
